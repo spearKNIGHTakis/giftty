@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Send, Heart, Star, Smile, Gift as GiftIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, Send, Heart, Star, Smile, Gift as GiftIcon, Smartphone } from "lucide-react";
 
 interface CardType {
   id: string;
@@ -29,6 +30,9 @@ export const CardCustomizer = ({ selectedCard, onBack, onSendCard }: CardCustomi
   const [includeGift, setIncludeGift] = useState(false);
   const [giftAmount, setGiftAmount] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState("🎉");
+  const [paymentMethod, setPaymentMethod] = useState("mobile-money");
+  const [mobileProvider, setMobileProvider] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
 
   const emojis = ["🎉", "💕", "🎂", "🏆", "🙏", "⭐", "💖", "🎈", "🌟", "💐"];
 
@@ -44,13 +48,18 @@ export const CardCustomizer = ({ selectedCard, onBack, onSendCard }: CardCustomi
       emoji: selectedEmoji,
       gift: includeGift ? {
         amount: parseFloat(giftAmount),
-        currency: "GHS" // Ghana Cedi
+        currency: "GHS",
+        paymentMethod,
+        mobileProvider: paymentMethod === "mobile-money" ? mobileProvider : null,
+        recipientPhone: paymentMethod === "mobile-money" ? recipientPhone : null
       } : null
     };
     onSendCard(cardData);
   };
 
-  const isFormValid = recipientName && recipientEmail && message && senderName && (!includeGift || giftAmount);
+  const isFormValid = recipientName && recipientEmail && message && senderName && 
+    (!includeGift || (giftAmount && paymentMethod && 
+      (paymentMethod !== "mobile-money" || (mobileProvider && recipientPhone))));
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -88,6 +97,12 @@ export const CardCustomizer = ({ selectedCard, onBack, onSendCard }: CardCustomi
                   <GiftIcon className="w-5 h-5" />
                   <span className="font-semibold">Gift Included: ₵{giftAmount}</span>
                 </div>
+                {paymentMethod === "mobile-money" && mobileProvider && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Smartphone className="w-4 h-4" />
+                    <span className="text-sm">via {mobileProvider}</span>
+                  </div>
+                )}
               </div>
             )}
           </Card>
@@ -170,7 +185,7 @@ export const CardCustomizer = ({ selectedCard, onBack, onSendCard }: CardCustomi
                 <Label htmlFor="includeGift" className="text-base font-medium">
                   Include a Gift
                 </Label>
-                <p className="text-sm text-muted-foreground">Add money to your card</p>
+                <p className="text-sm text-muted-foreground">Send money with your card</p>
               </div>
               <Switch
                 id="includeGift"
@@ -180,17 +195,61 @@ export const CardCustomizer = ({ selectedCard, onBack, onSendCard }: CardCustomi
             </div>
             
             {includeGift && (
-              <div>
-                <Label htmlFor="giftAmount">Gift Amount (₵)</Label>
-                <Input
-                  id="giftAmount"
-                  type="number"
-                  min="1"
-                  step="0.01"
-                  value={giftAmount}
-                  onChange={(e) => setGiftAmount(e.target.value)}
-                  placeholder="Enter amount in Ghana Cedi"
-                />
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="giftAmount">Gift Amount (₵)</Label>
+                  <Input
+                    id="giftAmount"
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    value={giftAmount}
+                    onChange={(e) => setGiftAmount(e.target.value)}
+                    placeholder="Enter amount in Ghana Cedi"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="paymentMethod">Payment Method</Label>
+                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select payment method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="mobile-money">Mobile Money</SelectItem>
+                      <SelectItem value="bank-transfer">Bank Transfer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {paymentMethod === "mobile-money" && (
+                  <>
+                    <div>
+                      <Label htmlFor="mobileProvider">Mobile Money Provider</Label>
+                      <Select value={mobileProvider} onValueChange={setMobileProvider}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select provider" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="MTN Mobile Money">MTN Mobile Money</SelectItem>
+                          <SelectItem value="Vodafone Cash">Vodafone Cash</SelectItem>
+                          <SelectItem value="AirtelTigo Money">AirtelTigo Money</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="recipientPhone">Recipient's Mobile Money Number</Label>
+                      <Input
+                        id="recipientPhone"
+                        type="tel"
+                        value={recipientPhone}
+                        onChange={(e) => setRecipientPhone(e.target.value)}
+                        placeholder="e.g., 0244123456"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>

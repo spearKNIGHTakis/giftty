@@ -50,12 +50,28 @@ export const CardSent = ({ cardData, onBackToGallery }: CardSentProps) => {
           </div>
           
           {cardData.gift && (
-            <div className="flex justify-between items-center p-3 bg-accent/10 rounded-lg border-l-4 border-accent">
-              <div className="flex items-center gap-2">
-                <Gift className="w-4 h-4 text-accent" />
-                <span className="text-muted-foreground">Gift Amount:</span>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center p-3 bg-accent/10 rounded-lg border-l-4 border-accent">
+                <div className="flex items-center gap-2">
+                  <Gift className="w-4 h-4 text-accent" />
+                  <span className="text-muted-foreground">Gift Amount:</span>
+                </div>
+                <span className="font-semibold text-accent">₵{cardData.gift.amount}</span>
               </div>
-              <span className="font-semibold text-accent">₵{cardData.gift.amount}</span>
+              
+              {cardData.gift.paymentMethod === "mobile-money" && (
+                <div className="flex justify-between items-center p-2 bg-muted/30 rounded text-sm">
+                  <span className="text-muted-foreground">Payment Method:</span>
+                  <span>{cardData.gift.mobileProvider}</span>
+                </div>
+              )}
+              
+              {cardData.gift.recipientPhone && (
+                <div className="flex justify-between items-center p-2 bg-muted/30 rounded text-sm">
+                  <span className="text-muted-foreground">Mobile Money Number:</span>
+                  <span>{cardData.gift.recipientPhone}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -88,7 +104,11 @@ export const CardSent = ({ cardData, onBackToGallery }: CardSentProps) => {
       <div className="text-sm text-muted-foreground space-y-2">
         <p>📧 The recipient will receive an email notification</p>
         {cardData.gift && (
-          <p>💳 Gift processing may take 1-2 business days</p>
+          <p>
+            {cardData.gift.paymentMethod === "mobile-money" 
+              ? "📱 Mobile money transfer will be processed within 24 hours" 
+              : "💳 Gift processing may take 1-2 business days"}
+          </p>
         )}
       </div>
     </div>
