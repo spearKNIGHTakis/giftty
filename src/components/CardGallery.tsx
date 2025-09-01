@@ -19,40 +19,98 @@ interface CardType {
   defaultMessage: string;
 }
 
-const cardTypes: CardType[] = [
-  {
-    id: "birthday",
-    title: "Birthday Wishes",
-    category: "Birthday",
-    image: birthdayCard,
-    icon: PartyPopper,
-    defaultMessage: "Happy Birthday! Wishing you a day filled with joy and celebration! 🎉"
-  },
-  {
-    id: "anniversary",
-    title: "Anniversary Love",
-    category: "Anniversary", 
-    image: anniversaryCard,
-    icon: Heart,
-    defaultMessage: "Happy Anniversary! Here's to many more years of love and happiness! 💕"
-  },
-  {
-    id: "congrats",
-    title: "Congratulations",
-    category: "Congratulations",
-    image: congratsCard,
-    icon: Trophy,
-    defaultMessage: "Congratulations on your amazing achievement! You deserve all the success! 🏆"
-  },
-  {
-    id: "thankyou",
-    title: "Thank You",
-    category: "Thank You",
-    image: thankyouCard,
-    icon: Gift,
-    defaultMessage: "Thank you so much for everything! Your kindness means the world to me! 🙏"
-  }
-];
+const generateCards = (): CardType[] => {
+  const baseCards = [
+    {
+      category: "Birthday",
+      icon: PartyPopper,
+      image: birthdayCard,
+      messages: [
+        "Happy Birthday! Wishing you a day filled with joy and celebration! 🎉",
+        "Another year older, another year wiser! Have a fantastic birthday! 🎂",
+        "May your birthday be as special as you are! Celebrate big! 🎈",
+        "Sending you warm birthday wishes and lots of love! 🎁",
+        "Hope your birthday is absolutely amazing! Party time! 🥳",
+        "Wishing you happiness, health, and all your heart desires! 🌟",
+        "May this new year of life bring you endless opportunities! 💫",
+        "Happy Birthday to someone who lights up every room! ✨",
+        "Celebrating you today and always! Have the best day! 🎊",
+        "May your birthday be filled with laughter and sweet memories! 😊"
+      ]
+    },
+    {
+      category: "Anniversary",
+      icon: Heart,
+      image: anniversaryCard,
+      messages: [
+        "Happy Anniversary! Here's to many more years of love and happiness! 💕",
+        "Celebrating your beautiful love story today! Cheers to you both! 🥂",
+        "Another year of love, laughter, and togetherness! Congratulations! 💖",
+        "Your love continues to inspire everyone around you! Happy Anniversary! 💝",
+        "May your love grow stronger with each passing year! 💗",
+        "Wishing you both endless happiness and romance! 🌹",
+        "Here's to the perfect couple on your special day! 💑",
+        "Your journey together is truly beautiful! Happy Anniversary! 💐",
+        "May your love story continue to be magical! 💫",
+        "Celebrating the love that brings you two together! 💞"
+      ]
+    },
+    {
+      category: "Congratulations",
+      icon: Trophy,
+      image: congratsCard,
+      messages: [
+        "Congratulations on your amazing achievement! You deserve all the success! 🏆",
+        "Your hard work has paid off! So proud of your accomplishment! 🌟",
+        "Well done! You've reached an incredible milestone! 🎯",
+        "Congratulations! Your dedication and perseverance have led you here! 💪",
+        "What an outstanding achievement! You should be very proud! 🥇",
+        "Bravo! Your success is well-deserved and inspiring! 👏",
+        "Congratulations on this fantastic accomplishment! Keep shining! ✨",
+        "You did it! Your achievement is truly remarkable! 🎊",
+        "So excited to celebrate your success with you! Well done! 🎉",
+        "Your achievement is proof that dreams do come true! Congrats! 🌈"
+      ]
+    },
+    {
+      category: "Thank You",
+      icon: Gift,
+      image: thankyouCard,
+      messages: [
+        "Thank you so much for everything! Your kindness means the world to me! 🙏",
+        "I'm so grateful for your support and friendship! Thank you! 💚",
+        "Your thoughtfulness never goes unnoticed! Thank you from my heart! ❤️",
+        "Thank you for being such an amazing person! You're appreciated! 🌸",
+        "I can't thank you enough for all that you do! You're wonderful! 🌻",
+        "Your generosity and kindness have touched my heart! Thank you! 💝",
+        "Thank you for making such a positive difference in my life! 🌟",
+        "I'm blessed to have someone like you! Thank you for everything! 🙏",
+        "Your support means more than you'll ever know! Thank you! 💕",
+        "Thank you for being you! Your kindness is truly special! 🌺"
+      ]
+    }
+  ];
+
+  const cards: CardType[] = [];
+  
+  baseCards.forEach((baseCard, categoryIndex) => {
+    for (let i = 1; i <= 50; i++) {
+      const messageIndex = (i - 1) % baseCard.messages.length;
+      cards.push({
+        id: `${baseCard.category.toLowerCase().replace(' ', '')}-${i}`,
+        title: `${baseCard.category} Card ${i}`,
+        category: baseCard.category,
+        image: baseCard.image,
+        icon: baseCard.icon,
+        defaultMessage: baseCard.messages[messageIndex]
+      });
+    }
+  });
+
+  return cards;
+};
+
+const cardTypes: CardType[] = generateCards();
 
 interface CardGalleryProps {
   onSelectCard: (card: CardType) => void;
