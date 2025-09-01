@@ -45,7 +45,7 @@ const Index = () => {
                 <Heart className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">CardGift Ghana</h1>
+                <h1 className="text-xl font-bold text-foreground">Giftty</h1>
                 <p className="text-sm text-muted-foreground">Send love, share joy</p>
               </div>
             </div>
@@ -120,7 +120,7 @@ const Index = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="font-semibold text-foreground">CardGift Ghana</span>
+              <span className="font-semibold text-foreground">Giftty</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               Spreading joy across Ghana, one card at a time. Send personalized greeting cards 
